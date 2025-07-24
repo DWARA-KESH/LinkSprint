@@ -13,7 +13,6 @@ linksprint
 *.out
 
 # Go module cache
-/pkg/
 /vendor/ # If you ever use go mod vendor
 
 # VS Code and other IDE files
