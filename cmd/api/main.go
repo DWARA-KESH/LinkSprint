@@ -4,16 +4,16 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os" // Import os for Getenv
+	"net/url"
+	"os"
 
-	// For cache expiration
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/redis/go-redis/v9"
 
-	"github.com/DWARA-KESH/LinkSprint/internal/cache"      // Corrected import path
-	"github.com/DWARA-KESH/LinkSprint/internal/handler"    // Corrected import path
-	"github.com/DWARA-KESH/LinkSprint/internal/repository" // Corrected import path
+	"github.com/DWARA-KESH/LinkSprint/internal/cache"
+	"github.com/DWARA-KESH/LinkSprint/internal/handler"
+	"github.com/DWARA-KESH/LinkSprint/internal/repository"
 )
 
 func main() {
@@ -21,17 +21,17 @@ func main() {
 
 	// CORS middleware (essential for frontend)
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",
+		AllowOrigins: "*", // For local testing. Change to your Render frontend URL in production.
 		AllowHeaders: "Origin, Content-Type, Accept",
 	}))
 
 	// 1. Initialize CockroachDB
 	dbConnStr := os.Getenv("DATABASE_URL")
 	if dbConnStr == "" {
-		dbConnStr = "postgresql://root@localhost:26257/LinkSprint?sslmode=disable"
+		dbConnStr = "postgresql://root@localhost:26257/linksprint?sslmode=disable" // Fallback for local Docker Compose
 		log.Println("DATABASE_URL environment variable not set, falling back to local CockroachDB.")
 	}
-	db, err := repository.InitDB(dbConnStr) // Corrected: Expects 2 return values, passes argument
+	db, err := repository.InitDB(dbConnStr)
 	if err != nil {
 		log.Fatalf("failed to connect to CockroachDB: %v", err)
 	}
@@ -48,11 +48,26 @@ func main() {
 	// 2. Initialize Redis Client
 	redisAddr := os.Getenv("REDIS_ADDR")
 	if redisAddr == "" {
-		redisAddr = "localhost:6379"
+		redisAddr = "localhost:6379" // Fallback for local Docker Compose
 		log.Println("REDIS_ADDR environment variable not set, falling back to local Redis.")
 	}
+
+	// --- NEW CODE FOR PARSING REDIS URL ---
+	parsedRedisURL, err := url.Parse(redisAddr)
+	if err != nil {
+		log.Fatalf("failed to parse Redis URL '%s': %v", redisAddr, err)
+	}
+
+	// Use Host (which is hostname:port) from the parsed URL
+	redisHostPort := parsedRedisURL.Host
+	if redisHostPort == "" {
+		// Fallback if parsing didn't yield a host:port, might happen for "localhost:6379" directly
+		redisHostPort = redisAddr
+	}
+	// --- END NEW CODE ---
+
 	redisClient := redis.NewClient(&redis.Options{
-		Addr: redisAddr, // Use address from env var or fallback
+		Addr: redisHostPort, // <--- Use the parsed host:port here
 		DB:   0,
 	})
 	if _, err := redisClient.Ping(context.Background()).Result(); err != nil {
@@ -71,7 +86,7 @@ func main() {
 	// Determine the base URL for shortened links (use Render's URL in production)
 	serviceBaseURL := os.Getenv("SERVICE_BASE_URL")
 	if serviceBaseURL == "" {
-		serviceBaseURL = "http://localhost:3000"
+		serviceBaseURL = "http://localhost:3000" // Default for local
 	}
 
 	// 3. Initialize handler with repository, cache, and the base URL
@@ -90,5 +105,5 @@ func main() {
 	if port == "" {
 		port = "3000" // Default port if not set by environment
 	}
-	log.Fatal(app.Listen(fmt.Sprintf(":%s", port))) // Listen on port from env or fallback
+	log.Fatal(app.Listen(fmt.Sprintf(":%s", port)))
 }
