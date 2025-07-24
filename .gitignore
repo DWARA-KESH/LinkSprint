@@ -1,0 +1,35 @@
+# Binaries for programs
+linksprint
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test binary for programs
+*-test
+*.test
+
+# Output of 'go build'
+*.out
+
+# Go module cache
+/pkg/
+/vendor/ # If you ever use go mod vendor
+
+# VS Code and other IDE files
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Docker specific
+.dockerignore
+
+# Environment variables files (IMPORTANT: Do NOT commit files with credentials!)
+.env
+.env.*
+
+# Local development specific (docker-compose will run locally, not on Render)
+docker-compose.yml

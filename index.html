@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkSprint URL Shortener</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --primary-dark: #0056b3;
+            --secondary-color: #6c757d;
+            --background-light: #f8f9fa;
+            --background-dark: #e9ecef;
+            --text-color: #343a40;
+            --border-color: #dee2e6;
+            --error-color: #dc3545;
+            --success-color: #28a745;
+            --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--background-light) 0%, #ffffff 100%);
+            margin: 0;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        #container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-light);
+            width: 90%;
+            max-width: 550px; /* Slightly wider for better desktop feel */
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #container:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 2.8em; /* Larger for impact */
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        /* Styles for text inputs, excluding datetime-local */
+        input[type="text"] {
+            width: calc(100% - 24px); /* Account for padding and border */
+            padding: 14px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px; /* Softer edges */
+            font-size: 1.1em;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px); /* Slight lift effect */
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #shortenedUrl {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--background-dark);
+            border-radius: 8px;
+            word-break: break-all;
+            font-size: 1.1em;
+            color: var(--text-color);
+            min-height: 20px;
+            text-align: left;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        #shortenedUrl a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        #shortenedUrl a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .error {
+            color: var(--error-color);
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 600px) {
+            #container {
+                padding: 25px 20px;
+                margin: 20px; /* Add some margin on smaller screens */
+            }
+
+            h1 {
+                font-size: 2.2em;
+                margin-bottom: 20px;
+            }
+
+            input[type="text"] { /* Remove datetime-local specific styling */
+                font-size: 1em;
+                padding: 12px;
+            }
+
+            button {
+                font-size: 1em;
+                padding: 12px 25px;
+            }
+
+            #shortenedUrl {
+                font-size: 0.95em;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>LinkSprint</h1>
+        <input type="text" id="longUrlInput" placeholder="Enter your long URL here (e.g., https://www.google.com/very/long/path)">
+        
+        <input type="text" id="customSlugInput" placeholder="Optional: Custom short code (e.g., my-promo)">
+        <button onclick="shortenUrl()">Shorten URL</button>
+        <div id="shortenedUrl"></div>
+    </div>
+
+    <script>
+        async function shortenUrl() {
+            const longUrl = document.getElementById('longUrlInput').value;
+            const customSlug = document.getElementById('customSlugInput').value;
+            // Removed expiresAt from JS
+            
+            const outputDiv = document.getElementById('shortenedUrl');
+            outputDiv.innerHTML = ''; // Clear previous messages
+            outputDiv.classList.remove('error'); // Remove error class if present
+
+            if (!longUrl) {
+                outputDiv.innerHTML = '<span class="error">Please enter a URL.</span>';
+                return;
+            }
+
+            // Basic URL validation
+            try {
+                new URL(longUrl);
+            } catch (e) {
+                outputDiv.innerHTML = '<span class="error">Please enter a valid URL (e.g., https://example.com).</span>';
+                return;
+            }
+
+            // Construct the request body with optional fields
+            const requestBody = { url: longUrl };
+
+            if (customSlug) {
+                requestBody.custom_slug = customSlug;
+            }
+
+            // Removed expires_at logic from requestBody
+
+            try {
+                // IMPORTANT: Ensure your Go backend is running at http://localhost:3000
+                const response = await fetch('http://localhost:3000/shorten', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody) // Use the constructed requestBody
+                });
+
+                if (!response.ok) {
+                    let errorMsg = 'Failed to shorten URL. Please try again.';
+                    try {
+                        const errorData = await response.json();
+                        errorMsg = errorData.error || errorMsg;
+                    } catch (parseError) {
+                        // If response is not JSON, use default message
+                    }
+                    throw new Error(errorMsg);
+                }
+
+                const data = await response.json();
+                outputDiv.innerHTML = `Shortened URL: <a href="${data.short_url}" target="_blank">${data.short_url}</a>`;
+            } catch (error) {
+                outputDiv.innerHTML = `<span class="error">Error: ${error.message}</span>`;
+                console.error('Front-end Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
