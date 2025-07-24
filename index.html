@@ -39,7 +39,7 @@
             border-radius: 12px;
             box-shadow: var(--shadow-light);
             width: 90%;
-            max-width: 550px; /* Slightly wider for better desktop feel */
+            max-width: 550px; 
             text-align: center;
             transition: all 0.3s ease-in-out;
         }
@@ -51,18 +51,18 @@
         h1 {
             color: var(--primary-color);
             margin-bottom: 30px;
-            font-size: 2.8em; /* Larger for impact */
+            font-size: 2.8em;
             font-weight: 600;
             letter-spacing: -0.5px;
         }
 
         /* Styles for text inputs, excluding datetime-local */
         input[type="text"] {
-            width: calc(100% - 24px); /* Account for padding and border */
+            width: calc(100% - 24px);
             padding: 14px;
             margin-bottom: 20px;
             border: 1px solid var(--border-color);
-            border-radius: 8px; /* Softer edges */
+            border-radius: 8px;
             font-size: 1.1em;
             box-sizing: border-box;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -89,7 +89,7 @@
 
         button:hover {
             background-color: var(--primary-dark);
-            transform: translateY(-2px); /* Slight lift effect */
+            transform: translateY(-2px);
         }
 
         button:active {
@@ -127,11 +127,10 @@
             margin-top: 15px;
         }
 
-        /* --- Responsive Design --- */
         @media (max-width: 600px) {
             #container {
                 padding: 25px 20px;
-                margin: 20px; /* Add some margin on smaller screens */
+                margin: 20px; 
             }
 
             h1 {
@@ -179,8 +178,8 @@
             // Removed expiresAt from JS
             
             const outputDiv = document.getElementById('shortenedUrl');
-            outputDiv.innerHTML = ''; // Clear previous messages
-            outputDiv.classList.remove('error'); // Remove error class if present
+            outputDiv.innerHTML = '';
+            outputDiv.classList.remove('error');
 
             if (!longUrl) {
                 outputDiv.innerHTML = '<span class="error">Please enter a URL.</span>';
@@ -195,18 +194,14 @@
                 return;
             }
 
-            // Construct the request body with optional fields
             const requestBody = { url: longUrl };
 
             if (customSlug) {
                 requestBody.custom_slug = customSlug;
             }
 
-            // Removed expires_at logic from requestBody
-
             try {
-                // IMPORTANT: Ensure your Go backend is running at http://localhost:3000
-                const response = await fetch('http://localhost:3000/shorten', {
+                const response = await fetch('https://linksprint.onrender.com/shorten', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
