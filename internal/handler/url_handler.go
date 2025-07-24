@@ -7,10 +7,10 @@ import (
 	"net/url" // For more robust URL validation
 	"time"
 
-	"github.com/DWARA-KESH/linksprint/internal/cache"      // Corrected import path
-	"github.com/DWARA-KESH/linksprint/internal/model"      // Corrected import path
-	"github.com/DWARA-KESH/linksprint/internal/repository" // Corrected import path
-	"github.com/DWARA-KESH/linksprint/pkg/utils"           // Corrected import path
+	"github.com/DWARA-KESH/LinkSprint/internal/cache"      // Corrected import path
+	"github.com/DWARA-KESH/LinkSprint/internal/model"      // Corrected import path
+	"github.com/DWARA-KESH/LinkSprint/internal/repository" // Corrected import path
+	"github.com/DWARA-KESH/LinkSprint/pkg/utils"           // Corrected import path
 	"github.com/gofiber/fiber/v2"
 )
 

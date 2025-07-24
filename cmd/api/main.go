@@ -11,9 +11,9 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/redis/go-redis/v9"
 
-	"github.com/DWARA-KESH/linksprint/internal/cache"      // Corrected import path
-	"github.com/DWARA-KESH/linksprint/internal/handler"    // Corrected import path
-	"github.com/DWARA-KESH/linksprint/internal/repository" // Corrected import path
+	"github.com/DWARA-KESH/LinkSprint/internal/cache"      // Corrected import path
+	"github.com/DWARA-KESH/LinkSprint/internal/handler"    // Corrected import path
+	"github.com/DWARA-KESH/LinkSprint/internal/repository" // Corrected import path
 )
 
 func main() {
@@ -28,7 +28,7 @@ func main() {
 	// 1. Initialize CockroachDB
 	dbConnStr := os.Getenv("DATABASE_URL")
 	if dbConnStr == "" {
-		dbConnStr = "postgresql://root@localhost:26257/linksprint?sslmode=disable"
+		dbConnStr = "postgresql://root@localhost:26257/LinkSprint?sslmode=disable"
 		log.Println("DATABASE_URL environment variable not set, falling back to local CockroachDB.")
 	}
 	db, err := repository.InitDB(dbConnStr) // Corrected: Expects 2 return values, passes argument
