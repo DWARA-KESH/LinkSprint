@@ -11,9 +11,9 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/redis/go-redis/v9"
 
-	"github.com/DWARA-KESH/LinkSprint/internal/cache"
-	"github.com/DWARA-KESH/LinkSprint/internal/handler"
-	"github.com/DWARA-KESH/LinkSprint/internal/repository"
+	"github.com/<YOUR-GITHUB-USERNAME>/LinkSprint/internal/cache"
+	"github.com/<YOUR-GITHUB-USERNAME>/LinkSprint/internal/handler"
+	"github.com/<YOUR-GITHUB-USERNAME>/LinkSprint/internal/repository"
 )
 
 func main() {
