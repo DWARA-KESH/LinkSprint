@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/<YOUR-GITHUB-USERNAME>/LinkSprint/internal/model"
+	"github.com/DWARA-KESH/LinkSprint/internal/model"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 )

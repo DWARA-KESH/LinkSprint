@@ -7,10 +7,10 @@ import (
 	"net/url" // For more robust URL validation
 	"time"
 
-	"github.com/<YOUR-GITHUB-USERNAME>/LinkSprint/internal/cache"
-	"github.com/<YOUR-GITHUB-USERNAME>/LinkSprint/internal/model"
-	"github.com/<YOUR-GITHUB-USERNAME>/LinkSprint/internal/repository"
-	"github.com/<YOUR-GITHUB-USERNAME>/LinkSprint/pkg/utils"
+	"github.com/DWARA-KESH/LinkSprint/internal/cache"
+	"github.com/DWARA-KESH/LinkSprint/internal/model"
+	"github.com/DWARA-KESH/LinkSprint/internal/repository"
+	"github.com/DWARA-KESH/LinkSprint/pkg/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
